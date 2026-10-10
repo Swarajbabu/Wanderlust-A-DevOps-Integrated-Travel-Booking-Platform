@@ -1,0 +1,387 @@
+body {
+    font-family: "Plus Jakarta Sans", sans-serif !important;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    flex: 1;
+}
+
+/* NavBar Styling Updates */
+.navbar {
+    min-height: 4.75rem;
+    height: auto;
+    background-color: #ffffff !important;
+    box-shadow: 0 1px 12px rgba(0, 0, 0, 0.08) !important;
+    border-bottom: 1px solid #f0f0f0 !important;
+    padding: 0.5rem 0 !important;
+    z-index: 1030;
+}
+.brand-icon {
+    color: #fe424d;
+    font-size: 2.1rem;
+    transition: transform 0.4s ease;
+}
+.navbar-brand:hover .brand-icon {
+    transform: rotate(45deg);
+}
+.brand-text {
+    color: #fe424d;
+    font-weight: 700;
+    font-size: 1.35rem;
+    letter-spacing: -0.5px;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    white-space: nowrap !important;
+}
+.navbar-brand:hover .brand-text {
+    color: #e33640;
+}
+.nav-link {
+    color: #222222 !important;
+    font-weight: 600;
+    font-size: 0.92rem;
+    white-space: nowrap !important;
+    display: inline-flex;
+    align-items: center;
+}
+.nav-link:hover {
+    color: #fe424d !important;
+}
+.nav-pill-btn {
+    padding: 0.55rem 0.95rem !important;
+    border-radius: 24px;
+    transition: all 0.2s ease;
+    white-space: nowrap !important;
+}
+.nav-pill-btn:hover {
+    background-color: #f7f7f7;
+    color: #fe424d !important;
+}
+.btn-guest-nav {
+    background: linear-gradient(135deg, #fe424d, #ff5a5f) !important;
+    color: #ffffff !important;
+    border-radius: 24px !important;
+    padding: 0.45rem 1rem !important;
+    font-weight: 600 !important;
+    font-size: 0.88rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    box-shadow: 0 2px 8px rgba(254, 66, 77, 0.28) !important;
+    transition: all 0.2s ease !important;
+    border: none !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+}
+.btn-guest-nav:hover {
+    background: linear-gradient(135deg, #e33640, #fe424d) !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(254, 66, 77, 0.4) !important;
+}
+.btn-profile-menu {
+    border: 1px solid #dddddd !important;
+    border-radius: 25px !important;
+    background-color: #ffffff !important;
+    padding: 5px 8px 5px 12px !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease !important;
+    box-shadow: none !important;
+    white-space: nowrap !important;
+}
+.btn-profile-menu::after {
+    display: none !important;
+}
+.btn-profile-menu:hover {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+    border-color: #c9c9c9 !important;
+}
+.btn-profile-menu .profile-icon {
+    font-size: 1.8rem;
+    color: #717171;
+}
+.btn-profile-menu .fa-bars {
+    color: #222222;
+    font-size: 0.95rem;
+}
+.dropdown-menu {
+    border-radius: 14px !important;
+    padding: 8px 0 !important;
+    min-width: 220px !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+}
+.dropdown-item {
+    padding: 10px 18px !important;
+    font-size: 0.92rem !important;
+    color: #222222 !important;
+    font-weight: 500;
+}
+.dropdown-item:hover {
+    background-color: #f7f7f7 !important;
+}
+
+
+/* Footer */
+.site-footer {
+    background-color: #222222;
+    color: #cccccc;
+    padding: 3.5rem 0 0;
+    margin-top: 3rem;
+}
+.footer-brand-icon {
+    color: #fe424d;
+    font-size: 1.8rem;
+}
+.footer-brand-text {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: -0.5px;
+}
+.footer-desc {
+    color: #999999;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    max-width: 300px;
+}
+.footer-socials {
+    display: flex;
+    gap: 0.75rem;
+}
+.footer-social-link {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid #444444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #cccccc;
+    font-size: 0.95rem;
+    transition: all 0.25s ease;
+    text-decoration: none;
+}
+.footer-social-link:hover {
+    background-color: #fe424d;
+    border-color: #fe424d;
+    color: white;
+    transform: translateY(-2px);
+}
+.footer-heading {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.footer-links li {
+    margin-bottom: 0.6rem;
+}
+.footer-links a {
+    color: #999999;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s ease, padding-left 0.2s ease;
+}
+.footer-links a:hover {
+    color: #fe424d;
+    padding-left: 4px;
+}
+.footer-bottom {
+    border-top: 1px solid #333333;
+    margin-top: 2.5rem;
+    padding: 1.25rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: #777777;
+}
+.footer-bottom-links a {
+    color: #999999;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+.footer-bottom-links a:hover {
+    color: #fe424d;
+}
+@media (max-width: 767.98px) {
+    .footer-bottom {
+        justify-content: center;
+        text-align: center;
+    }
+}
+
+/* Cards */
+
+.listing-card {
+    border: none !important;
+    margin-bottom: 2rem;
+}
+
+.card-img-top {
+    border-radius: 1rem !important;
+    width: 100% !important;
+    object-fit: cover !important;
+}
+
+.cardcard-body {
+    padding: 0px !important;
+}
+
+.card-text p {
+    font-weight: 400;
+}
+
+.listing-link {
+    text-decoration: none;
+}
+
+/* Card :xr-overlay */
+.card-img-overlay {
+    opacity: 0;
+}
+
+.card-img-overlay:hover {
+    background-color: white;
+    opacity: 0.2;
+}
+
+
+/* New Page */
+.add-btn {
+    background-color: #fe424d !important;
+    border: none !important;
+}
+
+/* Edit Page */
+.edit-btn {
+    background-color: #fe424d !important;
+    border: none !important;
+}
+
+.edit-img {
+    height: 150px;
+    width: 250px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+/* Search Form in Navbar - Modern Unified Pill */
+.search-form {
+    margin: 0;
+}
+.search-bar {
+    display: inline-flex;
+    align-items: center;
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 40px;
+    padding: 3px 5px 3px 18px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    max-width: 380px;
+}
+.search-bar:hover {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.14);
+    border-color: #c9c9c9;
+}
+.search-bar:focus-within {
+    border-color: #222222;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+}
+.search-input {
+    border: none !important;
+    background: transparent !important;
+    padding: 0.45rem 0.5rem 0.45rem 0 !important;
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
+    color: #222222 !important;
+    box-shadow: none !important;
+    width: 210px !important;
+}
+.search-input::placeholder {
+    color: #717171;
+    font-weight: 400;
+}
+.search-input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+.btn-search {
+    background-color: #fe424d !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 50% !important;
+    width: 34px !important;
+    height: 34px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 0.85rem !important;
+    transition: all 0.2s ease !important;
+    box-shadow: none !important;
+    flex-shrink: 0;
+}
+.btn-search:hover {
+    background-color: #e33640 !important;
+    transform: scale(1.05);
+}
+
+/* Mobile & Medium Device Responsiveness for Navbar */
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        background-color: white;
+        padding: 1rem 0 0.5rem;
+        border-top: 1px solid #f0f0f0;
+        margin-top: 0.5rem;
+    }
+    .search-form {
+        margin: 0.75rem 0;
+        width: 100%;
+    }
+    .search-bar {
+        width: 100%;
+        max-width: 100%;
+    }
+    .search-input {
+        width: 100% !important;
+        flex-grow: 1;
+        max-width: 100% !important;
+    }
+    .nav-pill-btn {
+        margin-right: 0 !important;
+        margin-bottom: 0.35rem;
+        width: 100%;
+        text-align: left;
+    }
+    .dropdown {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+    .btn-profile-menu {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .dropdown-menu {
+        position: static !important;
+        float: none;
+        width: 100%;
+        box-shadow: none !important;
+        border: 1px solid #eee !important;
+        margin-top: 0.5rem !important;
+    }
+}

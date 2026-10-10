@@ -1,0 +1,113 @@
+<% layout('layouts/boilerplate') -%>
+<link rel="stylesheet" href="/css/listing-form.css">
+
+<div class="listing-form-wrapper">
+  <div class="listing-form-card">
+    <div class="listing-form-header">
+      <i class="fa-solid fa-pen-to-square d-block"></i>
+      <h3>Edit Your Listing</h3>
+      <p>Update the details of your space</p>
+    </div>
+
+    <form action="/listings/<%= listings._id %>?_method=PUT&_csrf=<%= csrfToken %>" method="post" novalidate class="needs-validation" enctype="multipart/form-data">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <!-- Basic Details -->
+      <div class="form-section-title">Basic Details</div>
+
+      <div class="mb-3">
+        <label class="form-label form-icon-label" for="title">
+          <i class="fa-solid fa-heading"></i> Title
+        </label>
+        <input type="text" name="listing[title]" id="title" value="<%= listings.title %>" placeholder="e.g. Cozy Beachfront Cottage" class="form-control" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label form-icon-label" for="description">
+          <i class="fa-solid fa-align-left"></i> Description
+        </label>
+        <textarea name="listing[description]" id="description" placeholder="Describe your place — what makes it special?" class="form-control" required><%= listings.description %></textarea>
+        <div class="invalid-feedback">Please enter a short description.</div>
+      </div>
+
+      <!-- Image -->
+      <div class="form-section-title">Photos</div>
+
+      <div class="mb-3">
+        <label class="form-label form-icon-label">
+          <i class="fa-solid fa-photo-film"></i> Current Gallery (<%= galleryThumbs.length %> photo<%= galleryThumbs.length === 1 ? '' : 's' %>)
+        </label>
+        <div class="image-preview-grid">
+          <% galleryThumbs.forEach(function(thumbUrl) { %>
+            <div class="image-preview-thumb">
+              <img src="<%= thumbUrl %>" alt="Current listing photo">
+            </div>
+          <% }); %>
+        </div>
+      </div>
+
+      <div class="mb-3 file-upload-area">
+        <label class="form-label form-icon-label" for="images">
+          <i class="fa-solid fa-images"></i> Replace Photos (optional)
+        </label>
+        <input type="file" name="listing[images]" id="images" class="form-control" accept="image/png,image/jpeg,image/jpg" multiple>
+        <div class="form-text">Leave empty to keep the current gallery, or select 1 to 10 new photos to replace it entirely. Fewer than 3? We'll fill the rest with default stay photos.</div>
+        <div id="imagePreviewGrid" class="image-preview-grid"></div>
+      </div>
+
+      <!-- Pricing & Location -->
+      <div class="form-section-title">Pricing & Location</div>
+
+      <div class="row">
+        <div class="mb-3 col-md-4">
+          <label class="form-label form-icon-label" for="price">
+            <i class="fa-solid fa-indian-rupee-sign"></i> Price / Night
+          </label>
+          <input type="number" name="listing[price]" id="price" value="<%= listings.price %>" placeholder="e.g. 1200" class="form-control" required>
+          <div class="invalid-feedback">Price should be valid.</div>
+        </div>
+
+        <div class="mb-3 col-md-8">
+          <label class="form-label form-icon-label" for="country">
+            <i class="fa-solid fa-globe"></i> Country
+          </label>
+          <input type="text" name="listing[country]" id="country" value="<%= listings.country %>" placeholder="e.g. India" class="form-control" required>
+          <div class="invalid-feedback">Country should be valid.</div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label form-icon-label" for="location">
+          <i class="fa-solid fa-location-dot"></i> Location
+        </label>
+        <input type="text" name="listing[location]" id="location" value="<%= listings.location %>" placeholder="e.g. Hyderabad, Telangana" class="form-control" required>
+        <div class="invalid-feedback">Location should be valid.</div>
+      </div>
+
+      <button class="btn btn-listing-submit mt-3">
+        <i class="fa-solid fa-check me-2"></i>Update Listing
+      </button>
+    </form>
+  </div>
+</div>
+
+<script src="/js/script.js"></script>
+<script>
+  (() => {
+    const input = document.getElementById("images");
+    const grid = document.getElementById("imagePreviewGrid");
+    if (!input || !grid) return;
+
+    input.addEventListener("change", () => {
+      grid.innerHTML = "";
+      const files = Array.from(input.files || []).slice(0, 10);
+      files.forEach((file) => {
+        const url = URL.createObjectURL(file);
+        const thumb = document.createElement("div");
+        thumb.className = "image-preview-thumb";
+        thumb.innerHTML = `<img src="${url}" alt="${file.name}">`;
+        grid.appendChild(thumb);
+      });
+    });
+  })();
+</script>
