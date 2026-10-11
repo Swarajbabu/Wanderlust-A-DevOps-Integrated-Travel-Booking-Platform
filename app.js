@@ -13,6 +13,7 @@ if (process.env.NODE_ENV !== "production") {
     } catch (e) {
         // Ignore if unsupported
     }
+    
 }
 
 const express = require("express");
