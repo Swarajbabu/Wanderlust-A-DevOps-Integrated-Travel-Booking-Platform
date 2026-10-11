@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wanderlust-deployment
+  labels:
+    app: wanderlust
+spec:
+  replicas: 3 # 3 Pods running simultaneously for high availability
+  selector:
+    matchLabels:
+      app: wanderlust
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0 # Zero downtime deployments during updates
+  template:
+    metadata:
+      labels:
+        app: wanderlust
+    spec:
+      containers:
+        - name: wanderlust-container
+          image: 861809200696.dkr.ecr.ap-south-1.amazonaws.com/wanderlust-app:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+          envFrom:
+            - secretRef:
+                name: wanderlust-secret
+          resources:
+            requests:
+              cpu: "100m" # 0.1 CPU core reserved per pod
+              memory: "128Mi"
+            limits:
+              cpu: "500m" # 0.5 CPU core maximum limit
+              memory: "512Mi"
+          livenessProbe:
+            httpGet:
+              path: /listings
+              port: 8081
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /listings
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 5

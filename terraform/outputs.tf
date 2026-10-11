@@ -36,3 +36,14 @@ output "jenkins_url" {
   description = "URL to access Jenkins Web UI"
   value       = "http://${aws_instance.jenkins_server.public_ip}:8080"
 }
+
+# AWS EKS via Terraform
+output "eks_cluster_name" {
+  description = "The name of the EKS Cluster"
+  value       = aws_eks_cluster.main.name
+}
+
+output "eks_cluster_endpoint" {
+  description = "Endpoint for EKS control plane"
+  value       = aws_eks_cluster.main.endpoint
+}
