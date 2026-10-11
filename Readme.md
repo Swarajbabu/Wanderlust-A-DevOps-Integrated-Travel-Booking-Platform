@@ -19,9 +19,12 @@ A full-stack vacation rental platform — built end-to-end with session-based au
 [![GitHub last commit](https://img.shields.io/github/last-commit/Swarajbabu/Wanderlust-Travel-Stay-Booking-Application?style=flat-square)](https://github.com/Swarajbabu/Wanderlust-Travel-Stay-Booking-Application/commits/main)
 [![Open Issues](https://img.shields.io/github/issues/Swarajbabu/Wanderlust-Travel-Stay-Booking-Application?style=flat-square)](https://github.com/Swarajbabu/Wanderlust-Travel-Stay-Booking-Application/issues)
 
-[**🌐 Live Demo**](https://wanderlust.swarajvecha.in/) · [**Report Bug**](https://github.com/Swarajbabu/Wanderlust-Travel-Stay-Booking-Application/issues) · [**Request Feature**](https://github.com/Swarajbabu/Wanderlust-Travel-Stay-Booking-Application/issues)
+[**🌐 Live Demo**](http://a51fe5ad2863047968c94d092fc4c0ce-412112320.ap-south-1.elb.amazonaws.com/listings) · [**⚙️ DevOps Demo & Viva Cheat Sheet**](./DEMO_CHEATSHEET.md) · [**GitHub Repo**](https://github.com/Swarajbabu/Wanderlust-A-DevOps-Integrated-Travel-Booking-Platform)
 
 </div>
+
+> 🎓 **Teacher / Examiner Note:** For live evaluation commands, Kubernetes scaling tables, Jenkins links, and Grafana dashboard instructions, see the dedicated [**DEMO_CHEATSHEET.md**](./DEMO_CHEATSHEET.md).
+
 
 ---
 
