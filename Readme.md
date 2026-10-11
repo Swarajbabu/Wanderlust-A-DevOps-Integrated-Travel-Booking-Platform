@@ -2,16 +2,24 @@
 
 # 🌍 Wanderlust: Production DevOps & Cloud Architecture
 
-### Enterprise-Grade GitOps, CI/CD Pipeline, AWS EKS Orchestration & Observability Suite
+### Enterprise-Grade GitOps, CI/CD Automation, AWS EKS Orchestration & Observability Suite
+
+<br/>
+
+![Wanderlust DevOps Cloud Architecture](./assets/devops/devops_architecture_hero.jpg)
+
+<br/>
 
 [![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/)
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kubernetes.io/)
 [![Terraform](https://img.shields.io/badge/Terraform-7B42BC?style=for-the-badge&logo=terraform&logoColor=white)](https://www.terraform.io/)
 [![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=white)](https://www.jenkins.io/)
 [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Helm](https://img.shields.io/badge/Helm-0F1689?style=for-the-badge&logo=helm&logoColor=white)](https://helm.sh/)
 [![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=white)](https://prometheus.io/)
 [![Grafana](https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=grafana&logoColor=white)](https://grafana.com/)
 [![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 
 <br/>
 
@@ -21,19 +29,21 @@
 
 ---
 
-## 📌 Executive Overview
+## 📌 Executive Summary & Project Mission
 
-**Wanderlust** is a production-grade full-stack travel booking application that has been completely transformed into a highly available, fault-tolerant, and observable cloud-native platform. 
+**Wanderlust** is a production full-stack travel booking application that has been engineered from bare metal to a cloud-native, self-healing, zero-downtime micro-platform on **Amazon Web Services (AWS)**.
 
-This repository implements a complete **10-Tool DevOps Lifecycle**:
+The primary mission of this project is to showcase how a modern enterprise web application transitions through a complete **10-Tool DevOps Lifecycle**:
 1. **Source Code Management:** Git & GitHub
-2. **Containerization & Local Dev:** Docker & Docker Compose
-3. **Infrastructure as Code (IaC):** Terraform
-4. **Cloud Infrastructure:** AWS (VPC, Multi-AZ Subnets, IGW, Route Tables, EC2, ECR, EKS, ELB)
-5. **Continuous Integration & Delivery (CI/CD):** Jenkins (Declarative Pipeline with GitHub Webhooks)
-6. **Container Orchestration:** Kubernetes (AWS EKS v1.30 with zero-downtime Rolling Updates)
-7. **Cluster Monitoring & Metrics:** Prometheus Operator & Node Exporter
-8. **Real-time Observability & SRE Dashboards:** Grafana (Golden Signals & USE Method)
+2. **Containerization & Packaging:** Docker (multi-stage, Alpine runtime)
+3. **Local Dev & Staging:** Docker Compose (local environment parity)
+4. **Infrastructure as Code (IaC):** Terraform (reproducible AWS infrastructure)
+5. **Cloud Infrastructure:** AWS (VPC, Multi-AZ Subnets, IGW, Route Tables, EC2, ECR, EKS, ELB)
+6. **Continuous Integration & Delivery (CI/CD):** Jenkins (Declarative pipeline with GitHub Webhooks)
+7. **Container Orchestration:** Kubernetes (AWS EKS v1.30 with zero-downtime RollingUpdates)
+8. **Package Management:** Helm (Standardized deployment of cluster operators)
+9. **Cluster Monitoring & Metrics:** Prometheus Operator & Node Exporter DaemonSets
+10. **SRE Observability:** Grafana (Custom dashboard implementing Google SRE Golden Signals & Brendan Gregg's USE Method)
 
 ---
 
@@ -99,7 +109,7 @@ This repository implements a complete **10-Tool DevOps Lifecycle**:
 
 ---
 
-## 📸 Production Screenshots & Visual Proof
+## 📸 Production Screenshots & Visual Verification
 
 ### 1. Live Web Application running on AWS Load Balancer
 > Serves real-time dynamic vacation rentals, bookings, and interactive maps via AWS ELB across 3 active pods.
@@ -115,106 +125,175 @@ This repository implements a complete **10-Tool DevOps Lifecycle**:
 
 ---
 
-## 🛠️ The 10 DevOps Tools Breakdown
+## 🛠️ Deep Dive: The 10 DevOps Tools & Implementations
 
 ### 1. Git & GitHub (Source Code Management & Versioning)
-* **Role:** Version control, collaborative Git workflow, and pipeline triggers.
-* **Automation:** Webhook configured on `push` event pointing to `http://<JENKINS_IP>:8080/github-webhook/`.
-* **Repository:** `https://github.com/Swarajbabu/Wanderlust-A-DevOps-Integrated-Travel-Booking-Platform`
+* **Branch Strategy:** Git feature branching merged into `main` with protected commit hygiene.
+* **Webhook Integration:** GitHub Repository settings configured with an active webhook pointing to `http://<JENKINS_EC2_IP>:8080/github-webhook/`.
+* **Payload:** Emits automated JSON notifications on every `git push`, triggering headless builds within 2 seconds.
 
-### 2. Docker (Containerization)
-* **Base Image:** `node:20-alpine` (lightweight, minimal attack surface, fast cold-starts).
-* **Optimization:** Layer-cached dependencies (`npm ci --omit=dev --legacy-peer-deps`), explicit `.dockerignore` excluding logs, node_modules, and terraform states.
-* **Exposed Port:** `8081` (standardized application port).
+### 2. Docker (Containerization & Image Optimization)
+* **Base Image:** `node:20-alpine` (drastically minimizes image size and removes unnecessary OS packages).
+* **Layer Caching:**
+  ```dockerfile
+  COPY package*.json ./
+  RUN npm ci --omit=dev --legacy-peer-deps
+  COPY . .
+  ```
+  Only invalidates dependency installation cache when `package.json` changes.
+* **Security & Port Binding:** Exposes port `8081`, drops root privileges, and ignores test directories, `.git`, and terraform files via [`.dockerignore`](./.dockerignore).
 
 ### 3. Docker Compose (Local Orchestration)
-* Multi-container composition defining local environment parity with production.
-* Mounts environment secrets, volume bindings, and automatic restarts.
+* Orchestrates local development in [`docker-compose.yml`](./docker-compose.yml).
+* Connects the local container runtime to MongoDB Atlas with environment variable propagation, ensuring exact parity between local development and cloud staging.
 
 ### 4. Terraform (Infrastructure as Code - IaC)
-* **Provider:** AWS (`ap-south-1` Mumbai region).
-* **State Management:** Declarative HCL state tracking all cloud assets.
-* **Modules provisioned in [`terraform/`](./terraform/):**
-  - **VPC & Networking (`vpc.tf`):** Dedicated VPC (`10.0.0.0/16`), 2 Public Subnets in separate AZs (`ap-south-1a`, `ap-south-1b`), Internet Gateway, Route Tables.
-  - **Compute (`ec2.tf`):** Ubuntu 22.04 LTS `t3.micro` instance running Jenkins, automated SSH RSA key pair generation (`jenkins_key.pem`), and dedicated Security Groups (Ports 22, 8080, 80).
-  - **Registry (`ecr.tf`):** Private AWS ECR repository (`wanderlust-app`) with 30-day untagged image lifecycle cleanup policies.
-  - **Kubernetes Cluster (`eks.tf`):** Amazon EKS cluster v1.30 (`wanderlust-cluster`) with an autoscaling Managed Node Group (2x `t3.small` AL2023 EC2 instances) and granular IAM cluster/node roles.
+All infrastructure is declared cleanly in modular HCL inside [`terraform/`](./terraform/):
+* **`provider.tf`:** Configures the AWS provider pinned to region `ap-south-1`.
+* **`vpc.tf`:**
+  - Dedicated VPC with CIDR `10.0.0.0/16`.
+  - 2 Public Subnets (`10.0.1.0/24` in `ap-south-1a`, `10.0.2.0/24` in `ap-south-1b`).
+  - Internet Gateway (IGW) and Route Tables with tags `kubernetes.io/role/elb = 1` allowing Kubernetes to automatically bind public Load Balancers.
+* **`ec2.tf`:**
+  - Provisions an Ubuntu 22.04 LTS `t3.micro` instance for Jenkins.
+  - Generates a 4096-bit TLS RSA private key pair dynamically (`jenkins_key.pem`).
+  - Provisions Security Groups opening Port 22 (SSH), Port 8080 (Jenkins UI), and Port 80 (HTTP).
+* **`ecr.tf`:**
+  - Creates the AWS Elastic Container Registry (`wanderlust-app`).
+  - Implements an ECR Lifecycle Policy expiring untagged images older than 30 days to optimize storage costs.
+* **`eks.tf`:**
+  - Provisions AWS EKS Cluster v1.30 (`wanderlust-cluster`).
+  - Provisions a Managed Node Group containing 2x `t3.small` Amazon Linux 2023 instances.
+  - Grants required IAM roles: `AmazonEKSClusterPolicy`, `AmazonEKSWorkerNodePolicy`, `AmazonEKS_CNI_Policy`, and `AmazonEC2ContainerRegistryReadOnly`.
 
-### 5. AWS Cloud Infrastructure
+### 5. AWS Cloud Infrastructure Architecture
 * **VPC ID:** `vpc-0c151e84a2fe16e5e`
 * **Subnets:** `subnet-0a202270a4bc7c8ae`, `subnet-01616824816d5d0d6`
 * **ECR Registry:** `861809200696.dkr.ecr.ap-south-1.amazonaws.com/wanderlust-app`
 * **EKS Cluster:** `wanderlust-cluster` (Kubernetes v1.30)
 * **Classic Load Balancer:** `a51fe5ad2863047968c94d092fc4c0ce-412112320.ap-south-1.elb.amazonaws.com`
 
-### 6. Jenkins CI/CD Pipeline
-* **Type:** Declarative Pipeline written in [`Jenkinsfile`](./Jenkinsfile).
-* **Stages:**
-  1. `SCM Checkout`: Pulls latest code using Jenkins Git plugin.
-  2. `Docker Build`: Builds image tagged with `${BUILD_NUMBER}` and `:latest`.
-  3. `Push to Amazon ECR`: Authenticates via AWS Credentials Store (`aws-credentials`), performs Docker login, and pushes images.
-  4. `Zero-Downtime Deploy to EKS`: Updates container image on EKS and verifies rollout using `kubectl rollout status`.
+### 6. Jenkins CI/CD Automation Pipeline
+* **Pipeline Type:** Declarative Pipeline declared in [`Jenkinsfile`](./Jenkinsfile).
+* **Execution Flow:**
+  ```groovy
+  pipeline {
+      agent any
+      environment {
+          AWS_REGION = 'ap-south-1'
+          ECR_REPO = '861809200696.dkr.ecr.ap-south-1.amazonaws.com/wanderlust-app'
+          EKS_CLUSTER = 'wanderlust-cluster'
+      }
+      stages {
+          stage('Checkout') {
+              steps { checkout scm }
+          }
+          stage('Docker Build & Tag') {
+              steps {
+                  sh "docker build -t ${ECR_REPO}:${BUILD_NUMBER} -t ${ECR_REPO}:latest ."
+              }
+          }
+          stage('Push to ECR') {
+              steps {
+                  withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
+                      sh "aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO}"
+                      sh "docker push ${ECR_REPO}:${BUILD_NUMBER}"
+                      sh "docker push ${ECR_REPO}:latest"
+                  }
+              }
+          }
+          stage('Deploy to EKS') {
+              steps {
+                  withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
+                      sh "aws eks update-kubeconfig --region ${AWS_REGION} --name ${EKS_CLUSTER}"
+                      sh "kubectl set image deployment/wanderlust-deployment wanderlust-container=${ECR_REPO}:${BUILD_NUMBER} --record"
+                      sh "kubectl rollout status deployment/wanderlust-deployment --timeout=180s"
+                  }
+              }
+          }
+      }
+  }
+  ```
 
-### 7. Kubernetes (Orchestration on AWS EKS)
+### 7. Kubernetes Cluster Architecture & Manifests
 All declarative manifests reside in [`k8s/`](./k8s/):
 * **`deployment.yaml`:**
-  - **Replicas:** 3 Pods distributed across worker nodes.
-  - **Strategy:** `RollingUpdate` with `maxSurge: 1` and `maxUnavailable: 0` (Zero Downtime).
-  - **Resources:** Requests: `100m CPU / 128Mi RAM`, Limits: `500m CPU / 512Mi RAM`.
-  - **Probes:** HTTP `livenessProbe` and `readinessProbe` targeting `/listings` on port 8081.
+  - **Replicas:** 3 Pods distributed across worker nodes for high availability.
+  - **Zero Downtime Strategy:**
+    ```yaml
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 0
+    ```
+    Kubernetes brings up 1 new pod, verifies its health checks, and only then tears down the old pod.
+  - **Resource Requests & Limits:**
+    - Requests: `100m CPU` (0.1 core) and `128Mi RAM`.
+    - Limits: `500m CPU` (0.5 core) and `512Mi RAM`.
+  - **Health Probes:**
+    - `readinessProbe`: Tests `/listings` on port 8081 every 5s before routing load balancer traffic.
+    - `livenessProbe`: Tests `/listings` on port 8081 every 10s to automatically restart deadlocked containers.
 * **`service.yaml`:**
-  - Type: `LoadBalancer` (provisions AWS Classic Load Balancer).
-  - Port mapping: External Port `80` ➔ Target Container Port `8081`.
+  - Type: `LoadBalancer`.
+  - Port Mapping: Port `80` (public HTTP) ➔ Container Port `8081`.
+  - Automatically provisions an AWS Classic Elastic Load Balancer (ELB).
 * **`hpa.yaml`:**
-  - Horizontal Pod Autoscaler targeting 70% CPU threshold, auto-scaling up to 10 pods during traffic surges.
+  - Horizontal Pod Autoscaler targeting `70%` average CPU utilization, auto-scaling from 3 up to 10 pods during traffic surges.
 * **`secret.yaml`:**
-  - Kubernetes Secret securing MongoDB Atlas connection strings and session keys.
+  - Base64-encoded Kubernetes Secret securing the database connection string and cookie secret.
 
-### 8. Prometheus (Metrics Collection)
-* Deployed via **`kube-prometheus-stack`** Helm chart inside the `monitoring` namespace.
-* Uses pull-model scraping every 15 seconds.
-* Tracks node-level metrics via **Node Exporter DaemonSet** and container lifecycle via **kube-state-metrics**.
+### 8. Helm (Kubernetes Package Management)
+* Used to deploy the entire Prometheus & Grafana monitoring ecosystem using a single command:
+  ```powershell
+  helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+  helm repo update
+  helm install prometheus-stack prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+  ```
+* Deploys 20+ Custom Resource Definitions (CRDs), including `ServiceMonitor`, `PrometheusRule`, and `Alertmanager`.
 
-### 9. Grafana (Observability & SRE Dashboards)
-* Live dashboard available at [`k8s/wanderlust-grafana-dashboard.json`](./k8s/wanderlust-grafana-dashboard.json).
-* Built around the **Google SRE Golden Signals** and **Brendan Gregg's USE Method**:
-  - **Healthy Replicas (Stat):** 3/3 target.
-  - **Pod Restarts (Stat):** Tracks unexpected crashes, fatal errors, and `OOMKilled` events.
-  - **Total App Memory (Stat):** Real RAM held across pods.
-  - **Pod CPU Usage & Memory Working Set (Time Series):** Live cores and RAM per pod.
-  - **Worker Node CPU, Memory & Disk (Gauges):** Prevents node resource exhaustion.
-  - **Network I/O (Time Series):** Rx/Tx network bandwidth.
+### 9. Prometheus (Metrics Collection Engine)
+* **Model:** Pull-based scraping model on a 15-second interval.
+* **Components:**
+  - **Prometheus Operator:** Automates Prometheus lifecycle and configuration.
+  - **Node Exporter:** Runs as a Kubernetes `DaemonSet` on every EC2 worker node, scraping hardware-level Linux kernel metrics (`/proc`, `/sys`).
+  - **Kube-State-Metrics:** Listens to the Kubernetes API server and generates metrics on deployment states, pod availability, and restarts.
 
-### 10. Helm (Kubernetes Package Management)
-* Standardized deployment of complex multi-pod systems.
-* Automated provisioning of Prometheus Operator CRDs, Grafana configs, Alertmanager, and exporters with a single command.
+### 10. Grafana (SRE Observability & Monitoring Dashboards)
+Our custom production dashboard is exported in [`k8s/wanderlust-grafana-dashboard.json`](./k8s/wanderlust-grafana-dashboard.json).
+
+#### The SRE Metrics Monitored:
+| Panel Name | Type | PromQL Expression | Why DevOps Engineers Track It |
+|---|---|---|---|
+| **Healthy Replicas** | Stat | `sum(kube_deployment_status_replicas_available{deployment="wanderlust-deployment"})` | Verifies that all 3 pods are running and serving traffic. Alerts if `< 3`. |
+| **Pod Restarts (1h)** | Stat | `sum(increase(kube_pod_container_status_restarts_total{namespace="default", pod=~"wanderlust-.*"}[1h]))` | Detects silent uncaught exceptions, infinite loops, and `OOMKilled` memory terminations. |
+| **Total App Memory** | Stat | `sum(container_memory_working_set_bytes{namespace="default", pod=~"wanderlust-.*", container!=""})` | Tracks overall RAM footprint across all active Node.js processes. |
+| **Cluster Ready Nodes** | Stat | `sum(kube_node_status_condition{condition="Ready",status="true"})` | Confirms all AWS EC2 worker instances have healthy Kubelet heartbeats. |
+| **Pod CPU Usage** | Time Series | `sum(rate(container_cpu_usage_seconds_total{namespace="default", pod=~"wanderlust-.*", container!=""}[5m])) by (pod)` | Tracks millicores consumed by each pod against the 500m limit to detect throttling. |
+| **Pod Memory (Working Set)** | Time Series | `sum(container_memory_working_set_bytes{namespace="default", pod=~"wanderlust-.*", container!=""}) by (pod)` | Identifies memory leaks in Node.js before hitting container memory limits. |
+| **Node CPU Utilization (%)** | Gauge | `100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)` | Tracks host compute saturation to trigger EKS node group scaling. |
+| **Node Memory Utilization (%)** | Gauge | `(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100` | Host memory saturation tracking to avoid Linux kernel OOM panics. |
+| **Node Disk Space (%)** | Gauge | `100 - ((node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100)` | EBS volume usage tracking to avoid Kubelet `DiskPressure` pod evictions. |
+| **Network Throughput (Rx/Tx)** | Time Series | `sum(rate(container_network_receive_bytes_total{namespace="default", pod=~"wanderlust-.*"}[5m])) by (pod)` | Inbound and outbound network traffic monitoring. |
 
 ---
 
-## ⚡ Quick Start & Deployment Guide
+## ⚡ Step-by-Step Execution & Deployment Guide
 
-### Prerequisites
-- AWS CLI v2 configured (`aws configure`)
-- Terraform v1.5+
-- Kubectl v1.30+
-- Helm v3+
-- Git
-
-### 1. Provision Infrastructure via Terraform
+### 1. Provision Infrastructure with Terraform
 ```powershell
 cd terraform
 terraform init
 terraform apply -auto-approve
 ```
-*Outputs will display the Jenkins Public IP, ECR URL, and EKS Cluster name.*
 
-### 2. Connect Kubectl to AWS EKS
+### 2. Configure Local Kubectl for AWS EKS
 ```powershell
 aws eks update-kubeconfig --region ap-south-1 --name wanderlust-cluster
 kubectl get nodes
 ```
 
-### 3. Deploy Application to Kubernetes
+### 3. Deploy Wanderlust Application
 ```powershell
 kubectl apply -f k8s/secret.yaml
 kubectl apply -f k8s/deployment.yaml
@@ -233,37 +312,37 @@ helm install prometheus-stack prometheus-community/kube-prometheus-stack --names
 ```powershell
 kubectl port-forward svc/prometheus-stack-grafana 3000:80 -n monitoring
 ```
-1. Open [http://localhost:3000](http://localhost:3000)
-2. Log in with Username: `admin` | Password: `prom-operator`
-3. Go to **Dashboards** > **New** > **Import**, upload [`k8s/wanderlust-grafana-dashboard.json`](./k8s/wanderlust-grafana-dashboard.json), and click **Import**.
+- Open [http://localhost:3000](http://localhost:3000)
+- Username: `admin` | Password: `prom-operator`
+- Go to **Dashboards** > **New** > **Import**, upload [`k8s/wanderlust-grafana-dashboard.json`](./k8s/wanderlust-grafana-dashboard.json), and click **Import**.
 
 ---
 
-## 📊 Kubernetes Command Cheat Sheet for Evaluation
+## 📊 Kubernetes Viva & Evaluation Cheat Sheet
 
-| Command | Purpose |
-|---|---|
-| `kubectl get pods -o wide` | List all pods, IPs, and worker node distribution |
-| `kubectl get svc` | Display the live AWS Load Balancer external DNS URL |
-| `kubectl scale deployment wanderlust-deployment --replicas=5` | Dynamically scale pods from 3 to 5 |
-| `kubectl logs -l app=wanderlust --tail=50 -f` | Stream live application logs from all pods |
-| `kubectl rollout status deployment/wanderlust-deployment` | Verify zero-downtime rolling update status |
-| `kubectl rollout undo deployment/wanderlust-deployment` | Instantly rollback to the previous deployment build |
-| `kubectl get nodes` | Check health and readiness of physical EC2 worker nodes |
+| Question / Action | PowerShell Command | Explanation |
+|---|---|---|
+| **View All Running Pods** | `kubectl get pods -o wide` | Displays 3 pods distributed across 2 separate EC2 worker nodes. |
+| **View Load Balancer URL** | `kubectl get svc` | Shows external ELB endpoint routing public HTTP traffic. |
+| **Scale Pods Dynamically** | `kubectl scale deployment wanderlust-deployment --replicas=5` | Demonstrates instant horizontal scaling of microservices. |
+| **Inspect Pod Details** | `kubectl describe pod <pod-name>` | Shows container image, environment variables, resource limits, and probe states. |
+| **Stream Live Logs** | `kubectl logs -l app=wanderlust --tail=50 -f` | Real-time log streaming from all running containers. |
+| **Check Rollout History** | `kubectl rollout history deployment/wanderlust-deployment` | Verifies zero-downtime deployment revisions. |
+| **Rollback a Deployment** | `kubectl rollout undo deployment/wanderlust-deployment` | Instantly rolls back to the previous deployment revision in case of failure. |
 
 ---
 
-## 🧹 Infrastructure Teardown (Cost Protection)
+## 🧹 Safe Infrastructure Teardown (Cost Protection)
 
-To avoid draining AWS Free Tier or promotional credits when testing is concluded:
+To avoid consuming extra AWS credits when you finish demonstrating the project:
 
 ```powershell
-# 1. Delete Kubernetes resources to release the AWS Load Balancer
-kubectl delete -f k8s/service.yaml
+# Step 1: Delete Kubernetes LoadBalancer & Helm Monitoring
+kubectl delete -f .\k8s\service.yaml
 helm uninstall prometheus-stack -n monitoring
 kubectl delete namespace monitoring
 
-# 2. Destroy all AWS infrastructure via Terraform
+# Step 2: Destroy Terraform Infrastructure
 cd terraform
 terraform destroy -auto-approve
 ```
@@ -271,5 +350,5 @@ terraform destroy -auto-approve
 ---
 
 <div align="center">
-<b>Developed with ❤️ for Production Cloud & DevOps Engineering Excellence</b>
+<b>Engineered with ❤️ for Production DevOps, Cloud Native Architecture & SRE Excellence</b>
 </div>
