@@ -85,8 +85,10 @@ app.use(helmet({
             objectSrc: [],
             imgSrc: ["'self'", "blob:", "data:", "https://res.cloudinary.com", "https://images.unsplash.com", "https://api.mapbox.com", "https://*.tiles.mapbox.com"],
             fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
+            upgradeInsecureRequests: null,
         },
     },
+    hsts: false,
     crossOriginEmbedderPolicy: false,
 }));
 
