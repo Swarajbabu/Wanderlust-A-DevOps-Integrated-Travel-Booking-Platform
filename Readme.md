@@ -121,6 +121,9 @@ The primary mission of this project is to showcase how an enterprise web applica
   └────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+> 💡 **Visual Architecture Diagram:** See the high-resolution architecture diagram above and in `assets/devops/devops_architecture_hero.jpg` for the full infographic breakdown.
+
+
 ---
 
 ## 📸 Production Screenshots & Live Proof
